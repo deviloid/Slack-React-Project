@@ -1,4 +1,4 @@
-#Slack React Project
+# Slack React Project
 
 This project is a learning experience to get familiarized with the following technologies:
 1. React
