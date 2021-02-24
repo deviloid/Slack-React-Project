@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {Form, Grid, Icon, Segment, Header, Button, Message} from 'semantic-ui-react'
-import "./Register.css"
+import { Link } from 'react-router-dom';
+import "../Auth.css"
+import firebase from "../../../server/firebase";
 
 const Register = () => {
 
@@ -13,9 +15,13 @@ const Register = () => {
 
     let errors = [];
 
+    let userCollectionRef = firebase.database().ref('users');
+
     const [userState, setuserState] = useState(user);
     const [errorState, seterrorState] = useState(errors);
-    
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+
     const handleInput = (event) => {
         let target = event.target;
         setuserState((currentState) => {
@@ -57,10 +63,56 @@ const Register = () => {
     }
 
     const onSubmit = (event) => {
+        setIsSuccess(false);
         seterrorState(() => []);
         if(checkForm()){
-
+            setIsLoading(true);
+            firebase.auth()
+            .createUserWithEmailAndPassword(userState.email, userState.password)
+            .then(createdUser => {
+                setIsLoading(false);
+                updateUserDetails(createdUser);
+            })
+            .catch(serverError => {
+                setIsLoading(false);
+                seterrorState((error) => error.concat(serverError));
+            })
         }
+    }
+
+    const updateUserDetails = (createdUser) => {
+        if (createdUser) {
+            setIsLoading(true);
+            createdUser.user
+            .updateProfile({
+                displayName : userState.userName,
+                photoURL : `http://gravatar.com/avatar/${createdUser.user.uid}?d=identicon`
+            })
+            .then(() => {
+                setIsLoading(false);
+                saveUserInDB(createdUser);
+            })
+            .catch((serverError) => {
+                setIsLoading(false);
+                seterrorState((error) => error.concat(serverError));
+            })
+        }
+    }
+
+    const saveUserInDB = (createdUser) => {
+        setIsLoading(true);
+        userCollectionRef.child(createdUser.user.uid).set({
+            displayName : createdUser.user.displayName,
+            photoURL : createdUser.user.photoURL,
+        })
+        .then(() => {
+            setIsLoading(false);
+            setIsSuccess(true);
+        })
+        .catch((serverError) => {
+            setIsLoading(false);
+            seterrorState((error) => error.concat(serverError)); 
+        })
     }
 
     const formaterrors = () => {
@@ -113,12 +165,18 @@ const Register = () => {
                         placeholder     = "Confirm Password"
                         />
                     </Segment>
-                    <Button>Submit</Button>
+                    <Button disabled={isLoading} loading={isLoading}>Submit</Button>
                 </Form>
                 {errorState.length > 0 && <Message error>
                     <h3>Error</h3>
                     {formaterrors()}
                 </Message>}
+                {isSuccess && <Message success>
+                    <h3>Successfully Registered</h3>
+                </Message>}
+                <Message>
+                    <h3>Already an User? <Link to="/login">Login</Link></h3>
+                </Message>
             </Grid.Column>
         </Grid>
 
