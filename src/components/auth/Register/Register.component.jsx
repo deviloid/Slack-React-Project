@@ -37,7 +37,6 @@ const Register = () => {
             return false;
         }
         else if(!checkPassword()) {
-            // seterrorState((error) => error.concat({message : "Given password is not valid."}));
             return false;
         }
         return true;
