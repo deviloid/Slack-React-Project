@@ -101,7 +101,7 @@ const Login = () => {
                     {formaterrors()}
                 </Message>}
                 <Message>
-                    <h3>Not yet Registered? <Link to="/register">Login</Link></h3>
+                    <h3>Not yet Registered? <Link to="/register">Register</Link></h3>
                 </Message>
             </Grid.Column>
         </Grid>

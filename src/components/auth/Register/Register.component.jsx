@@ -85,7 +85,7 @@ const Register = () => {
             createdUser.user
             .updateProfile({
                 displayName : userState.userName,
-                photoURL : `http://gravatar.com/avatar/${createdUser.user.uid}?d=identicon`
+                photoURL : `https://avatars.dicebear.com/4.5/api/avataaars/${userState.userName}.png?topChance=100&clothes[]=blazer&eyes[]=surprised&eyebrow[]=up&eyebrow[]=default&mouth[]=twinkle&skin[]=yellow`
             })
             .then(() => {
                 setIsLoading(false);

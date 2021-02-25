@@ -32,7 +32,7 @@ const UserInfo = (props) => {
                         <Header inverted as='h4' className="userInfo_displayName">
                             <Dropdown trigger={
                                 <span>
-                                    <Image src={props.user.photoURL} avatar></Image>
+                                    <Image as='h2' src={props.user.photoURL} avatar></Image>
                                     {props.user.displayName}
                                 </span>
                             }
