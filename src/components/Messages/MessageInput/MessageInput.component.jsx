@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import { Button, Input, Segment } from "semantic-ui-react";
 import firebase from "../../../server/firebase";
 import { connect } from "react-redux";
-
+import { ImageUpload } from "../ImageUpload/ImageUpload.component";
+import uuidv4 from "uuid/dist/v4";
 
 const MessageInput = (props) => {
 
     const messageRef = firebase.database().ref('messages');
 
-    const [messageState, setMessageState] = useState("");
+    const storageRef = firebase.storage().ref();
 
-    const createMessageInfo = () => {
+    const [messageState, setMessageState] = useState("");
+    
+    const [fileDialogState, setFileDialogState] = useState(false);
+
+    const createMessageInfo = (downloadURL) => {
         return {
             user: {
                 avatar: props.user.photoURL,
@@ -18,15 +23,16 @@ const MessageInput = (props) => {
                 id: props.user.uid
             },
             content: messageState,
+            image: downloadURL || "",
             timestamp: firebase.database.ServerValue.TIMESTAMP
         }
     }
 
-    const onSubmit = () => {
-        if (messageState) {
+    const sendMessage = (downloadURL) => {
+        if (messageState || downloadURL) {
             messageRef.child(props.channel.id)
                 .push()
-                .set(createMessageInfo())
+                .set(createMessageInfo(downloadURL))
                 .then(() => {
                     setMessageState("")
                     console.log('sent')
@@ -42,9 +48,23 @@ const MessageInput = (props) => {
 
     const createActionButtons = () => {
         return <>
-            <Button icon="send" onClick={onSubmit} />
-            <Button icon="upload" />
+            <Button icon="send" onClick={() => {sendMessage() }} />
+            <Button icon="upload" onClick={() => setFileDialogState(true)}/>
         </>
+    }
+
+    const uploadImage = (file, contentType) => {
+        const filePath = `chat/images/${uuidv4()}.jpg`;
+
+        storageRef.child(filePath).put(file, {contentType: contentType})
+        .then((data) => {
+            data.ref.getDownloadURL()
+            .then((url) => {
+                sendMessage(url);
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
     }
 
     return <Segment>
@@ -56,6 +76,7 @@ const MessageInput = (props) => {
             label={createActionButtons()}
             labelPosition="right"
         />
+        <ImageUpload uploadImage={uploadImage} open={fileDialogState} onClose={() => setFileDialogState(false)}/>
     </Segment>
 }
 
