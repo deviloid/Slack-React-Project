@@ -1,0 +1,29 @@
+.messagepanel {
+    /* padding-left: 15% !important; */
+    /* width: 500px !important; */
+    /* padding-right: 5% !important; */
+}
+
+#parent {
+    display: flex !important;
+    justify-items: center !important;
+    align-items: center !important;
+}
+
+#messages {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex: 1 !important;
+    /* Grow to rest of container */
+    /* background: lightgreen; */
+    /* Just so it's visible */
+}
+
+#sidebar {
+    display: flex !important;
+    /* justify-content: left; */
+    align-items: center !important;
+    width: 18rem;
+    /* display: grid; */
+}

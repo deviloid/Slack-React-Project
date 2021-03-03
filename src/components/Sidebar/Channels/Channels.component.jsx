@@ -22,13 +22,17 @@ const Channels = (props) => {
             setChannelState((currentState) => {
                 let updatedState = [...currentState];
                 updatedState.push(snap.val());
-                if(updatedState.length === 1) {
-                    props.selectChannel(updatedState[0])
-                }
                 return updatedState;
             })
-        })
+        });
+        return () => channelsRef.off();
     }, [])
+
+    useEffect(() => {
+        if(channelState.length > 0) {
+            props.selectChannel(channelState[0])
+        }
+    },[!props.channel ? channelState : null])
 
     // console.log(channelAddState);
 
@@ -47,11 +51,11 @@ const Channels = (props) => {
     const displayChannels = () => {
         if (channelState.length > 0) {
             return channelState.map((channel) => {
-                return <Menu.Item
+                return <Menu.Item className='clickable'
                     key     ={channel.id}
                     name    ={channel.name}
                     onClick ={() => props.selectChannel(channel)}
-                    active  ={channel.id == props.channel.id}
+                    active  ={props.channel && channel.id == props.channel.id}
                 >
 
                 </Menu.Item>
@@ -105,8 +109,8 @@ const Channels = (props) => {
                 ({channelState.length})
                 </Menu.Item>
                 {displayChannels()}
-                <Menu.Item>
-                    <span onClick={openModal} className='clickable'>
+                <Menu.Item className='clickable'>
+                    <span onClick={openModal}>
                         <Icon name='add' /> Add
                 </span>
                 </Menu.Item>

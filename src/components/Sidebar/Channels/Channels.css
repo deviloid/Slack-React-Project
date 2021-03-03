@@ -7,5 +7,16 @@
 }
 
 .ui.menu .item.active{
-    background: #1164A3 !important;
+    background: rgb(170, 108, 170) !important;
+    color: #ffffff !important;
 }
+
+.ui.menu .item.clickable:hover{
+    color: #000 !important;
+    background: #fff !important; 
+}
+
+/* span.clickable:hover{
+    color: #000 !important;
+    background: #fff !important;
+} */
