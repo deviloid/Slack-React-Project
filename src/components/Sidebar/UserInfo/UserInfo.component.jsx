@@ -26,7 +26,7 @@ const UserInfo = (props) => {
                 <Grid.Column>
                     <Grid.Row className="userinfo_grid_row">
                         <Header inverted as='h2'>
-                            <Icon name='slack' />
+                            <Icon name='slack hash' />
                             <Header.Content>Slack</Header.Content>
                         </Header>
                         <Header inverted as='h4' className="userInfo_displayName">
