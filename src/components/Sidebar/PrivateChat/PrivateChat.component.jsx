@@ -23,6 +23,7 @@ const PrivateChat = (props) => {
                 user.name = user.displayName;
                 user.id = snap.key;
                 user.isPrivateChat = true;
+                user.photo = user.photoURL;
                 updatedState.push(user);
                 return updatedState;
             })
