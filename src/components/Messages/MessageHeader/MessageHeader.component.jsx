@@ -5,9 +5,9 @@ const MessageHeader = (props) => {
     return <Segment clearing>
         <Header floated="left" fluid="true" as="h3">
             <span>
-                {props.channelName} <Icon name="star outline" size="small"/>
+                {(props.isPrivateChat ? "@ " : "# ") + props.channelName} {!props.isPrivateChat && <Icon name="star outline" size="small"/>}
             </span>
-            <Header.Subheader> {props.uniqueUsers} User{props.uniqueUsers === 1 ? "" : "s"} </Header.Subheader>
+            {!props.isPrivateChat && <Header.Subheader> {props.uniqueUsers} User{props.uniqueUsers === 1 ? "" : "s"} </Header.Subheader>}
         </Header>
         <Header floated="right">
             <Input
