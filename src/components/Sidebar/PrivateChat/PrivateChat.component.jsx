@@ -4,6 +4,7 @@ import { Icon, Menu } from "semantic-ui-react";
 import firebase from "../../../server/firebase";
 import { setChannel } from "../../../store/actioncreator";
 import { } from "../../../store/actioncreator";
+import "./PrivateChat.css";
 
 // import './Channels.css';
 
@@ -11,7 +12,13 @@ const PrivateChat = (props) => {
 
     const [usersState, setUsersState] = useState([]);
 
+    const [connectedUsersState, setConnectedUsersState] = useState([]);
+
     const usersRef = firebase.database().ref("users");
+
+    const connectedRef = firebase.database().ref(".info/connected");
+
+    const statusRef = firebase.database().ref("status");
 
     useEffect(() => {
         usersRef.on('child_added', (snap) => {
@@ -28,8 +35,42 @@ const PrivateChat = (props) => {
                 return updatedState;
             })
         });
-        return () => usersRef.off();
-    }, [])
+
+        connectedRef.on("value", snap => {
+            if (props.user && snap.val()) {
+                const userStatusRef = statusRef.child(props.user.uid);
+                userStatusRef.set(true);
+                userStatusRef.onDisconnect().remove();
+            }
+        })
+
+        return () => {
+            usersRef.off();
+            connectedRef.off();
+        };
+    }, [props.user])
+
+    useEffect(() => {
+        statusRef.on("child_added", snap => {
+            setConnectedUsersState((currentState) => {
+                let updatedState = [...currentState];
+                updatedState.push(snap.key);
+                return updatedState;
+            })
+        });
+        statusRef.on("child_removed", snap => {
+            setConnectedUsersState((currentState) => {
+                let updatedState = [...currentState];
+
+                let index = updatedState.indexOf(snap.key);
+                updatedState.splice(index, 1);
+                return updatedState;
+            })
+        });
+
+        return () => statusRef.off();
+
+    }, usersState);
 
     const displayUsers = () => {
         if (usersState.length > 0) {
@@ -40,7 +81,7 @@ const PrivateChat = (props) => {
                     onClick={() => selectUser(user)}
                     active={props.channel && generateChannelId(user.id) === props.channel.id}
                 >
-
+                    {user.name} <Icon name="circle" color={`${connectedUsersState.indexOf(user.id) !== -1 ? "green" : "grey" }`} size="small" className="status" />
                 </Menu.Item>
             })
         }
@@ -82,7 +123,8 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        selectChannel: (channel) => dispatch(setChannel(channel))
+        selectChannel: (channel) => dispatch(setChannel(channel)),
+        // activeUser : (active) =>dispatch(connectedUsersState)
     }
 }
 

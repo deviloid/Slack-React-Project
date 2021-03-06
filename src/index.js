@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Switch, Route, withRouter } from "react-router
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import Login from "./components/auth/Login/Login.component";
+import { AppLoader } from "./components/AppLoader/AppLoader.component";
 import Register from "./components/auth/Register/Register.component";
 import firebase from "./server/firebase";
 import { combinedReducers } from "./store/reducer";
@@ -28,25 +29,29 @@ const Index = (props) => {
       }
     })
   }, []);
-  
+
   console.log("Debug", props.currentUser);
 
-  return (<Switch>
-    <Route path="/login" component={Login} />
-    <Route path="/register" component={Register} />
-    <Route path="/" component={App} />
-  </Switch>)
+  return (<>
+    <AppLoader loading={props.loading && props.location.pathname==="/" } />
+    <Switch>
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+      <Route path="/" component={App} />
+    </Switch>
+  </>)
 }
 
 const mapStateToProps = (state) => {
   return {
-    currentUser : state.user.currentUser
+    currentUser: state.user.currentUser,
+    loading: state.channel.loading
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setUser : (user) => { dispatch(setUser(user)) }
+    setUser: (user) => { dispatch(setUser(user)) }
   }
 }
 
