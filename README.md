@@ -1,4 +1,4 @@
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=deviloid&repo=Slack-React-Project&show_icons=true&include_all_commits=true&bg_color=00abbd&title_color=ffffff)](https://github.com/deviloid/Slack-React-Project)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=deviloid&repo=Slack-React-Project&show_icons=true&include_all_commits=true&bg_color=00a6b7&title_color=ffffff)](https://github.com/deviloid/Slack-React-Project)
 
 
 # Slack React Project
