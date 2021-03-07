@@ -5,9 +5,8 @@ import MessageInput from "./MessageInput/MessageInput.component";
 import { connect } from "react-redux";
 import { setFavoriteChannel, removeFavoriteChannel } from "../../store/actioncreator";
 import firebase from "../../server/firebase";
-import { Button, Comment, Icon, Segment } from "semantic-ui-react";
+import { Comment, Segment } from "semantic-ui-react";
 import "./Messages.css"
-// import userEvent from "@testing-library/user-event";
 
 const Messages = (props) => {
 
@@ -73,7 +72,6 @@ const Messages = (props) => {
             }
             return acc;
         }, []);
-        // console.log(uniqueUsers.length)
         return uniqueUsers.length;
     }
 
@@ -101,7 +99,6 @@ const Messages = (props) => {
             favoriteRef.set({ channelId: props.channel.id, channelName: props.channel.name })
         }
     }
-
 
     const isStarred = () => {
         return Object.keys(props.favoriteChannels).includes(props.channel?.id);

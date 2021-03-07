@@ -30,10 +30,8 @@ const Index = (props) => {
     })
   }, []);
 
-  console.log("Debug", props.currentUser);
-
   return (<>
-    <AppLoader loading={props.loading && props.location.pathname==="/" } />
+    <AppLoader loading={props.loading && props.location.pathname === "/"} />
     <Switch>
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />

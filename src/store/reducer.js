@@ -24,7 +24,6 @@ const channelReducer = (state = defaultChannelState, action) => {
         let payload = action.payload;
         state = { ...payload };
         state.loading = false;
-        console.log("channelReducer" + state);
         return state;
     }
     return state;

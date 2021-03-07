@@ -5,7 +5,6 @@ import { Notification } from "../Notification/Notification.component";
 import firebase from "../../../server/firebase";
 import { setChannel } from "../../../store/actioncreator";
 import {  } from "../../../store/actioncreator";
-
 import './Channels.css';
 
 const Channels = (props) => {
@@ -20,7 +19,6 @@ const Channels = (props) => {
 
     useEffect(() => {
         channelsRef.on('child_added', (snap) => {
-            console.log(snap.val());
             setChannelState((currentState) => {
                 let updatedState = [...currentState];
                 updatedState.push(snap.val());
@@ -35,8 +33,6 @@ const Channels = (props) => {
             props.selectChannel(channelState[0])
         }
     },[!props.channel ? channelState : null])
-
-    // console.log(channelAddState);
 
     const openModal = () => {
         setModalOpenState(true);

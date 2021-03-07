@@ -16,7 +16,6 @@ const Login = () => {
     const [userState, setuserState] = useState(user);
     const [errorState, seterrorState] = useState(errors);
     const [isLoading, setIsLoading] = useState(false);
-    // const [isSuccess, setIsSuccess] = useState(false);
     
     const handleInput = (event) => {
         let target = event.target;
@@ -49,10 +48,6 @@ const Login = () => {
             seterrorState((error) => error.concat({message : "Please fill in all the fields."}));
             return false;
         }
-        // else if(!checkPassword()) {
-        //     // seterrorState((error) => error.concat({message : "Given password is not valid."}));
-        //     return false;
-        // }
         return true;
     }
 

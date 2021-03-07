@@ -6,8 +6,6 @@ import { Notification } from "../Notification/Notification.component";
 import { setChannel } from "../../../store/actioncreator";
 import "./PrivateChat.css";
 
-// import './Channels.css';
-
 const PrivateChat = (props) => {
 
     const [usersState, setUsersState] = useState([]);
@@ -22,7 +20,6 @@ const PrivateChat = (props) => {
 
     useEffect(() => {
         usersRef.on('child_added', (snap) => {
-            console.log(snap.val());
             setUsersState((currentState) => {
                 let updatedState = [...currentState];
 

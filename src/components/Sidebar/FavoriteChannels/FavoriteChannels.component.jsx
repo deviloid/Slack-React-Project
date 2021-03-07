@@ -2,10 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Icon, Menu } from "semantic-ui-react";
 import { setChannel } from "../../../store/actioncreator";
-// import { } from "../../../store/actioncreator";
-import "./FavoriteChannels.css";
 
-// import './Channels.css';
 
 const FavoriteChannels = (props) => {
 
@@ -45,8 +42,7 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        selectChannel: (channel) => dispatch(setChannel(channel)),
-        // activeUser : (active) =>dispatch(connectedUsersState)
+        selectChannel: (channel) => dispatch(setChannel(channel))
     }
 }
 

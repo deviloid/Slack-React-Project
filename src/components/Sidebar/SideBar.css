@@ -1,8 +1,6 @@
 .side_bar {
     background: #4c3c4c !important;
     font-size: 1.2rem !important;
-    /* height: 100%; */
-    /* width: 100%; */
     overflow-y: auto;
     overflow-x: hidden;
     height: 100vh !important;
@@ -10,6 +8,5 @@
 }
 
 #seperator {
-    /* height: 21.566px; */
     height: 30px;
 }
