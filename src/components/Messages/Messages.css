@@ -1,11 +1,12 @@
-.messagecontent{
+.messagecontent {
     /* height: 100%; */
     /* width: 100%; */
     overflow-y: scroll;
     height: calc(100vh - 195px) !important;
+    position: relative !important; 
 }
 
-#message-content{
+#message-content {
     width: 100%;
     max-height: 100%;
     padding: 0px 5px;

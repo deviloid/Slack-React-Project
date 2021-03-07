@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import MessageContent from "./MessageContent/MessageContent.component";
+import React, { useEffect, useRef, useState } from "react";
 import MessageHeader from "./MessageHeader/MessageHeader.component";
+import MessageContent from "./MessageContent/MessageContent.component";
 import MessageInput from "./MessageInput/MessageInput.component";
-import firebase from "../../server/firebase";
-import { setFavoriteChannel, removeFavoriteChannel } from "../../store/actioncreator";
 import { connect } from "react-redux";
-import { Comment, Segment } from "semantic-ui-react";
+import { setFavoriteChannel, removeFavoriteChannel } from "../../store/actioncreator";
+import firebase from "../../server/firebase";
+import { Button, Comment, Icon, Segment } from "semantic-ui-react";
 import "./Messages.css"
 // import userEvent from "@testing-library/user-event";
 
@@ -18,6 +18,8 @@ const Messages = (props) => {
     const [messagesState, setMessagesState] = useState([]);
 
     const [searchTermState, setSearchTermState] = useState("");
+
+    let divRef = useRef();
 
     useEffect(() => {
         if (props.channel) {
@@ -47,13 +49,21 @@ const Messages = (props) => {
         }
     }, [props.channel])
 
+    useEffect(() => {
+        divRef.scrollIntoView({ behavior: 'smooth' });
+    }, [messagesState])
+
     const displayMessages = () => {
         let messagesToDisplay = searchTermState ? filterMessageBySearchTerm() : messagesState;
         if (messagesToDisplay.length > 0) {
             return messagesToDisplay.map((message) => {
-                return <MessageContent ownMessage={message.user.id === props.user.uid} key={message.timestamp} message={message} />
+                return <MessageContent imageLoaded={imageLoaded} ownMessage={message.user.id === props.user.uid} key={message.timestamp} message={message} />
             })
         }
+    }
+
+    const imageLoaded = () => {
+        divRef.scrollIntoView({ behavior: 'smooth' });
     }
 
     const uniqueUsersCount = () => {
@@ -84,26 +94,17 @@ const Messages = (props) => {
     }
 
     const starChange = () => {
-        let favoriteRef = usersRef.child(props.user.uid).child("favorite").child(props.channel.id)
+        let favoriteRef = usersRef.child(props.user.uid).child("favorite").child(props.channel.id);
         if (isStarred()) {
             favoriteRef.remove();
-            console.log("unstarred!")
-        }
-        else {
+        } else {
             favoriteRef.set({ channelId: props.channel.id, channelName: props.channel.name })
-            console.log("starred!")
         }
     }
 
-   
+
     const isStarred = () => {
-        if (props.channel === null){
-            setTimeout(() => {
-                isStarred();
-            }, 100)
-        }
-        else
-        return (Object.keys(props.favoriteChannels)[0] === props.channel.id);
+        return Object.keys(props.favoriteChannels).includes(props.channel?.id);
     }
 
     return <div id="message-content">
@@ -111,6 +112,8 @@ const Messages = (props) => {
         <Segment className="messagecontent">
             <Comment.Group>
                 {displayMessages()}
+                <div ref={currentEl => divRef = currentEl} ></div>
+
             </Comment.Group>
         </Segment>
         <MessageInput />

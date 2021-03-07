@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Icon, Menu } from "semantic-ui-react";
 import firebase from "../../../server/firebase";
+import { Notification } from "../Notification/Notification.component";
 import { setChannel } from "../../../store/actioncreator";
-import { } from "../../../store/actioncreator";
 import "./PrivateChat.css";
 
 // import './Channels.css';
@@ -47,7 +47,7 @@ const PrivateChat = (props) => {
         return () => {
             usersRef.off();
             connectedRef.off();
-        };
+        }
     }, [props.user])
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const PrivateChat = (props) => {
 
         return () => statusRef.off();
 
-    }, usersState);
+    }, [usersState]);
 
     const displayUsers = () => {
         if (usersState.length > 0) {
@@ -81,7 +81,8 @@ const PrivateChat = (props) => {
                     onClick={() => selectUser(user)}
                     active={props.channel && generateChannelId(user.id) === props.channel.id}
                 >
-                    {user.name} <Icon name="circle" color={`${connectedUsersState.indexOf(user.id) !== -1 ? "green" : "grey" }`} size="small" className="status" />
+                     <Icon name="circle" color={`${connectedUsersState.indexOf(user.id) !== -1 ? "green" : "grey" }`} size="small" className="status" />
+                    <Notification user={props.user} channel={props.channel} notificationChannelId={generateChannelId(user.id)} displayName={user.name} />
                 </Menu.Item>
             })
         }
@@ -90,7 +91,15 @@ const PrivateChat = (props) => {
     const selectUser = (user) => {
         let userTemp = { ...user };
         userTemp.id = generateChannelId(user.id);
+        setLastVisited(props.user, props.channel);
+        setLastVisited(props.user, userTemp);
         props.selectChannel(userTemp);
+    }
+
+    const setLastVisited = (user, channel) => {
+        const lastVisited = usersRef.child(user.uid).child("lastVisited").child(channel.id);
+        lastVisited.set(firebase.database.ServerValue.TIMESTAMP);
+        lastVisited.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
     }
 
     const generateChannelId = (userId) => {
@@ -114,7 +123,7 @@ const PrivateChat = (props) => {
     )
 }
 
-const mapStatetoProps = (state) => {
+const mapStateToProps = (state) => {
     return {
         user: state.user.currentUser,
         channel: state.channel.currentChannel
@@ -123,9 +132,8 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        selectChannel: (channel) => dispatch(setChannel(channel)),
-        // activeUser : (active) =>dispatch(connectedUsersState)
+        selectChannel: (channel) => dispatch(setChannel(channel))
     }
 }
 
-export default connect(mapStatetoProps, mapDispatchToProps)(PrivateChat);
+export default connect(mapStateToProps, mapDispatchToProps)(PrivateChat);
